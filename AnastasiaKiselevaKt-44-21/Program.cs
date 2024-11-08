@@ -2,6 +2,7 @@ using AnastasiaKiselevaKt_44_21.Database;
 using Microsoft.EntityFrameworkCore;
 using NLog;
 using NLog.Web;
+using AnastasiaKiselevaKt_44_21.ServiceExtension;
 
 var builder = WebApplication.CreateBuilder(args);
 var logger = LogManager.Setup().LoadConfigurationFromAppSettings().GetCurrentClassLogger();
@@ -18,6 +19,8 @@ builder.Services.AddSwaggerGen();
 
     builder.Services.AddDbContext<StudentDbContext>(options =>
         options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+
+    builder.Services.AddServices();
 
     var app = builder.Build();
 
