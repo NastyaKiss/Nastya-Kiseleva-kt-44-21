@@ -18,7 +18,7 @@ namespace AnastasiaKiselevaKt_44_21.Models
         public List<Course>? Courses { get; set; }
         public bool IsValidGroupName()
         {
-            return Regex.Match(GroupName, @"/\D*-\d*-\d\d/g").Success;
+            return Regex.Match(GroupName, @"\D*-\d*-\d\d").Success;
         }
     }
 }
