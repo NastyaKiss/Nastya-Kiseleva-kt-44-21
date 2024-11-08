@@ -3,6 +3,7 @@ using AnastasiaKiselevaKt_44_21.ServiceExtensions;
 using Microsoft.EntityFrameworkCore;
 using NLog;
 using NLog.Web;
+using AnastasiaKiselevaKt_44_21.Middlewares;
 
 var builder = WebApplication.CreateBuilder(args);
 var logger = LogManager.Setup().LoadConfigurationFromAppSettings().GetCurrentClassLogger();
@@ -30,7 +31,9 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-app.UseAuthorization();
+    app.UseMiddleware<ExceptionHandlerMiddleware>();
+
+    app.UseAuthorization();
 
 app.MapControllers();
 
