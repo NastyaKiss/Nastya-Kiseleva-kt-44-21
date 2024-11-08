@@ -4,7 +4,6 @@ namespace AnastasiaKiselevaKt_44_21.Models
 {
     public class Student
     {
-       // [JsonIgnore]
         public int StudentId { get; set; }
         public string? FirstName { get; set; }
         public string? LastName { get; set; }
