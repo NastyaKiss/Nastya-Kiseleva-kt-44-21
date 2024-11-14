@@ -1,4 +1,5 @@
-﻿using AnastasiaKiselevaKt_44_21.Database;
+﻿using _1_lab.Models;
+using AnastasiaKiselevaKt_44_21.Database;
 using AnastasiaKiselevaKt_44_21.Filters.GroupFilter;
 using AnastasiaKiselevaKt_44_21.Filters.StudentFilters;
 using AnastasiaKiselevaKt_44_21.Filters.StudentFioFilters;
@@ -9,10 +10,10 @@ namespace AnastasiaKiselevaKt_44_21.Interfaces.StudentsInterfaces
 {
     public interface IStudentService
     {
-        public Task<Student[]> GetStudentsByGroupAsync(StudentGroupFilter filter, CancellationToken cancellationToken);
-        public Task<Student[]> GetStudentsByFioAsync(StudentFioFilter filter, CancellationToken cancellationToken);
-        public Task<Student[]> GetStudentsByIdGroupAsync(StudentIdGroup filter, CancellationToken cancellationToken);
-
+        Task<Student[]> GetStudentsByGroupAsync(StudentGroupFilter filter, CancellationToken cancellationToken);
+        Task<Student[]> GetStudentsByFioAsync(StudentFioFilter filter, CancellationToken cancellationToken);
+        //Task<Course[]> GetCoursesByGroupNameAsync(CourseFilter filter, CancellationToken cancellationToken); 
+        Task<Student[]> GetStudentsByIdGroupAsync(StudentIdGroup filter, CancellationToken cancellationToken);
     }
 
     public class StudentService : IStudentService
@@ -29,7 +30,14 @@ namespace AnastasiaKiselevaKt_44_21.Interfaces.StudentsInterfaces
 
             return students;
         }
+        //public async Task<Course[]> GetCoursesByGroupNameAsync(CourseFilter filter, CancellationToken cancellationToken = default)
+        //{
+        //    var courses = await _dbContext.Set<Course>()
+        //        .Where(c => c.Group.GroupName == filter.GroupName) 
+        //        .ToArrayAsync(cancellationToken);
 
+        //    return courses;
+        //}
         public Task<Student[]> GetStudentsByGroupAsync(StudentGroupFilter filter, CancellationToken cancellationToken = default)
         {
             var students = _dbContext.Set<Student>().Where(w => w.Group.GroupName == filter.GroupName).ToArrayAsync(cancellationToken);

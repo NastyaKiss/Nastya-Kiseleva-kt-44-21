@@ -8,6 +8,7 @@ using AnastasiaKiselevaKt_44_21.Filters.StudentFioFilters;
 using AnastasiaKiselevaKt_44_21.Interfaces.StudentsInterfaces;
 using AnastasiaKiselevaKt_44_21.Filters.GroupFilter;
 
+
 namespace AnastasiaKiselevaKt_44_21.Controllers
 {
     [ApiController]
@@ -16,6 +17,7 @@ namespace AnastasiaKiselevaKt_44_21.Controllers
     {
         private readonly ILogger<StudentsController> _logger;
         private readonly IStudentService _studentService;
+        private readonly IStudentService _courseService;
         private StudentDbContext _context;
 
         public StudentsController(ILogger<StudentsController> logger, IStudentService studentService, StudentDbContext context)
@@ -48,8 +50,9 @@ namespace AnastasiaKiselevaKt_44_21.Controllers
             var students = await _studentService.GetStudentsByFioAsync(filter, cancellationToken);
 
             return Ok(students);
-        }
 
+        }
+     
         [HttpPost("AddStudent", Name = "AddStudent")]
         public IActionResult CreateStudent([FromBody] Student student)
         {
