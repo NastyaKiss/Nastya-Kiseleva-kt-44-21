@@ -2,11 +2,13 @@
 using AnastasiaKiselevaKt_44_21.Interfaces.StudentsInterfaces;
 using AnastasiaKiselevaKt_44_21.Models;
 using Microsoft.EntityFrameworkCore;
+using AnastasiaKiselevaKt_44_21.Filters.StudentFilters;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+
 
 namespace AnastasiaKiselevaKt_44_21.Tests
 {
@@ -19,33 +21,34 @@ namespace AnastasiaKiselevaKt_44_21.Tests
         public StudentTests()
         {
             _dbContextOptions = new DbContextOptionsBuilder<StudentDbContext>()
-                .UseInMemoryDatabase(databaseName: "student_db_an") 
+                .UseInMemoryDatabase(databaseName: "student_db_an")
                 .Options;
 
             _context = new StudentDbContext(_dbContextOptions);
             _studentService = new StudentService(_context);
 
-            SeedDatabase(); 
+            SeedDatabase();
         }
 
         private void SeedDatabase() // база данных
         {
             var groups = new List<Group>
-        {
-            new Group { GroupName = "KT-44-21" },
-            new Group { GroupName = "KT-43-21" },
-            new Group { GroupName = "KT-42-21" },
-            new Group { GroupName = "KT-41-21" }
-        };
+    {
+        new Group { GroupName = "KT-44-21", GroupId = 1 },
+        new Group { GroupName = "KT-43-21", GroupId = 2 },
+        new Group { GroupName = "KT-42-21", GroupId = 3 },
+        new Group { GroupName = "KT-41-21", GroupId = 4 }
+    };
 
             _context.Set<Group>().AddRange(groups);
 
             var students = new List<Student>
-        {
-            new Student { FirstName = "a", LastName = "a", MiddleName = "a", GroupId = 4 },
-            new Student { FirstName = "a", LastName = "a", MiddleName = "b", GroupId = 4 },
-            new Student { FirstName = "a", LastName = "b", MiddleName = "a", GroupId = 3 }
-        };
+    {
+        new Student { FirstName = "a", LastName = "a", MiddleName = "a", GroupId = 1 }, // Группа KT-44-21
+        new Student { FirstName = "a", LastName = "a", MiddleName = "a", GroupId = 2 }, // Группа KT-44-21
+        new Student { FirstName = "a", LastName = "a", MiddleName = "b", GroupId = 1 }, // Группа KT-41-21    
+
+    };
 
             _context.Set<Student>().AddRange(students);
             _context.SaveChanges();
@@ -66,7 +69,7 @@ namespace AnastasiaKiselevaKt_44_21.Tests
             var studentsResult1 = await _studentService.GetStudentsByFioAsync(filter1, CancellationToken.None);
 
             // Assert
-            Assert.Equal(1, studentsResult1.Length);
+            Assert.Equal(2, studentsResult1.Length); // Ожидаем 1 студента
         }
 
         [Fact]
@@ -75,13 +78,29 @@ namespace AnastasiaKiselevaKt_44_21.Tests
             // Act
             var filter2 = new Filters.GroupFilter.StudentIdGroup
             {
-                GroupId = 4
+                GroupId = 1
             };
 
             var studentsResult2 = await _studentService.GetStudentsByIdGroupAsync(filter2, CancellationToken.None);
 
             // Assert
-            Assert.Equal(2, studentsResult2.Length);
+            Assert.Equal(2, studentsResult2.Length); // Ожидаем 1 студента
+        }
+
+        [Fact]
+        public async Task GetStudentsByGroupNameAsync_KT4421_TwoObjects() // тест по GroupName
+        {
+            // Arrange
+            var groupNameFilter = new Filters.StudentFilters.StudentGroupFilter
+            {
+                GroupName = "KT-44-21"
+            };
+
+            // Act
+            var studentsResult = await _studentService.GetStudentsByGroupAsync(groupNameFilter, CancellationToken.None);
+
+            // Assert
+            Assert.Equal(2, studentsResult.Length); // Ожидаем 2 студента
         }
 
         public void Dispose()
